@@ -41,7 +41,7 @@ permissions:
 
 jobs:
   delete:
-    uses: CheckmarxDev/ast-cli-javascript-wrapper-runtime-cli/.github/workflows/delete-packages-and-releases.yml@main
+    uses: Checkmarx/ast-cli-javascript-wrapper-runtime-cli/.github/workflows/delete-packages-and-releases.yml@main
     with:
       tag: ${{ inputs.jsTag }}
     secrets: inherit
@@ -170,7 +170,7 @@ jobs:
       release_version: ${{ needs.release.outputs.TAG_NAME }}
       cli_release_version: ${{ needs.release.outputs.CLI_VERSION }}
       release_author: "Phoenix Team"
-      release_url: https://github.com/CheckmarxDev/ast-cli-javascript-wrapper-runtime-cli/releases/tag/${{ needs.release.outputs.TAG_NAME }}
+      release_url: https://github.com/Checkmarx/ast-cli-javascript-wrapper-runtime-cli/releases/tag/${{ needs.release.outputs.TAG_NAME }}
       jira_product_name: JS_RUNTIME_WRAPPER
     secrets: inherit
 

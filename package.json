@@ -1,6 +1,6 @@
 {
-  "name": "@CheckmarxDev/ast-cli-javascript-wrapper-runtime-cli",
-  "version": "1.0.26",
+  "name": "@Checkmarx/ast-cli-javascript-wrapper-runtime-cli",
+  "version": "1.0.29",
   "description": "AST CLI Javascript wrapper runtime CLI",
   "main": "dist/main/wrapper/CxWrapper.js",
   "typings": "dist/main/wrapper/CxWrapper.d.ts",
@@ -26,13 +26,13 @@
     "test": "copyfiles -u 1 src/tests/data/* dist/; tsc && jest --runInBand",
     "test:unit": "tsc && jest --runInBand --testPathPattern=tests/unit --no-coverage"
   },
-  "repository": "https://github.com/CheckmarxDev/ast-cli-javascript-wrapper-runtime-cli.git",
+  "repository": "https://github.com/Checkmarx/ast-cli-javascript-wrapper-runtime-cli.git",
   "author": "Jay Nanduri",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/CheckmarxDev/ast-cli-javascript-wrapper-runtime-cli/issues"
+    "url": "https://github.com/Checkmarx/ast-cli-javascript-wrapper-runtime-cli/issues"
   },
-  "homepage": "https://github.com/CheckmarxDev/ast-cli-javascript-wrapper-runtime-cli#readme",
+  "homepage": "https://github.com/Checkmarx/ast-cli-javascript-wrapper-runtime-cli#readme",
   "devDependencies": {
     "@babel/core": "7.26.10",
     "@babel/plugin-transform-runtime": "^7.25.4",

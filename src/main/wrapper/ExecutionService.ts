@@ -25,7 +25,6 @@ import CxMask from "../mask/CxMask";
 import CxAsca from "../asca/CxAsca";
 
 let skipValue = false;
-const fileSourceFlag = "--file-source"
 const scaResolverParamsFlag = "--sca-resolver-params"
 
 function isJsonString(s: string) {
@@ -45,16 +44,15 @@ function transformation(commands: string[]): string[] {
 }
 
 function transform(n:string) {
-
-// in case the file name looks like this: 'var express require('express');.js' we won't delete "'"
     if (skipValue) {
         skipValue = false;
         let r = "";
         if(n) r = n.replace(/["]/g, "").replace("/[, ]/g",",");
         return r;
     }
-    // If the current string is "--file-source", set the flag
-    if (n === fileSourceFlag || n === "-s" || n === scaResolverParamsFlag) {
+    // If scaResolverParamsFlag contains a single quote inside a double-quoted string, we avoid removing single quotes to preserve the nested content.
+    // Example: --sca-resolver-params "--gradle-parameters='-Prepository.proxy.url=123 -Prepository.proxy.username=123 -Prepository.proxy.password=123' --log-level Debug"
+    if (n === scaResolverParamsFlag) {
         skipValue = true;
     }
 
