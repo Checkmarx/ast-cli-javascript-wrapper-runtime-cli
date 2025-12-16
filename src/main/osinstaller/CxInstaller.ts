@@ -47,6 +47,11 @@ export class CxInstaller {
 
         const architecture = this.getArchitecture();
 
+        const envVar = process.env.CX_CLI_LOCATION;
+        if (envVar !== undefined) {
+            return `${envVar}/ast-cli_${cliVersion}_${platformData.platform}_${architecture}.${platformData.extension}`;
+        }
+        
         return `https://download.checkmarx.com/CxOne/CLI/${cliVersion}/ast-cli_${cliVersion}_${platformData.platform}_${architecture}.${platformData.extension}`;
     }
 
