@@ -1,6 +1,6 @@
 {
   "name": "@Checkmarx/ast-cli-javascript-wrapper-runtime-cli",
-  "version": "1.0.33",
+  "version": "1.0.34",
   "description": "AST CLI Javascript wrapper runtime CLI",
   "main": "dist/main/wrapper/CxWrapper.js",
   "typings": "dist/main/wrapper/CxWrapper.d.ts",
