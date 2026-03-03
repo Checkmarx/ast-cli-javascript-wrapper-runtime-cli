@@ -13,9 +13,11 @@
         "forceConsistentCasingInFileNames": true,
         "noUnusedLocals": true,
         "pretty": true,
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true
     },
     "include": ["./src/**/*",
       "./src/main/wrapper/resources/**/*"
-    ]
+    ],
+    "exclude": ["node_modules"]
 }
