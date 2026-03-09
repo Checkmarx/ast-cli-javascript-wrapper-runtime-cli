@@ -18,6 +18,5 @@
     },
     "include": ["./src/**/*",
       "./src/main/wrapper/resources/**/*"
-    ],
-    "exclude": ["node_modules"]
+    ]
 }
