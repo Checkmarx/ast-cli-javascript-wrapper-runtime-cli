@@ -768,7 +768,11 @@
 		"webpack-cli": "^4.10.0"
 	},
 	"overrides": {
-		"bluebird": "3.7.2"
+		"bluebird": "3.7.2",
+		"xml2js": "^0.6.0",
+		"semver": "^7.5.4",
+		"minimatch": "^9.0.0",
+		"undici": ">=6.21.3"
 	},
 	"displayName": "Checkmarx",
 	"engines": {

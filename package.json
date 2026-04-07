@@ -15,7 +15,7 @@
     "https-proxy-agent": "^7.0.6",
     "log4js": "^6.9.1",
     "node-fetch": "^3.3.2",
-    "tar": "^7.5.8",
+    "tar": "^7.5.11",
     "unzipper": "^0.12.3"
   },
   "scripts": {
@@ -47,7 +47,7 @@
     "@typescript-eslint/parser": "^5.29.0",
     "babel-jest": "^29.7.0",
     "copyfiles": "^2.4.1",
-    "eslint": "8.1.0",
+    "eslint": "^8.57.1",
     "jest": "^29.7.0",
     "jest-cli": "29.7.0",
     "ts-jest": "^29.2.5",
@@ -55,7 +55,9 @@
     "typescript": "^5.6.3"
   },
   "overrides": {
-    "bluebird": "3.7.2"
+    "bluebird": "3.7.2",
+    "flatted": "^3.4.2",
+    "minimatch": "^3.1.2"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
