@@ -27,7 +27,7 @@
     "test:unit": "tsc && jest --runInBand --testPathPattern=tests/unit --no-coverage"
   },
   "repository": "https://github.com/Checkmarx/ast-cli-javascript-wrapper-runtime-cli.git",
-  "author": "Anurag Dalke",
+  "author": "Checkmarx",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Checkmarx/ast-cli-javascript-wrapper-runtime-cli/issues"
