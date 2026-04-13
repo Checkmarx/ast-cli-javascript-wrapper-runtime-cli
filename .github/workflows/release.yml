@@ -49,7 +49,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: ${{ secrets.OR_GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       BRANCH_NAME: npm-version-patch
     outputs:
       TAG_NAME: ${{ steps.generate_tag_name.outputs.TAG_NAME }}
