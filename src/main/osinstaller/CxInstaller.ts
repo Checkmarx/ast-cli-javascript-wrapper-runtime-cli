@@ -79,7 +79,11 @@ export class CxInstaller {
             try {
                 const content = await fsPromises.readFile(this.getChecksumsFilePath(), 'utf-8');
                 checksum = (JSON.parse(content) as Record<string, string>)[key] ?? null;
+                if (checksum === null) {
+                    logger.warn(`No checksum found for ${key} in checksums file. Download will not be verified.`);
+                }
             } catch {
+                logger.warn(`Checksums file not found. Download of version ${version} will not be verified.`);
                 checksum = null;
             }
         }
