@@ -9,12 +9,15 @@ on:
   repository_dispatch:
     types: [cli-version-update]
 
+permissions:
+  contents: read
+
 jobs:
   update-checkmarx-cli:
-    runs-on: ubuntu-latest
+    runs-on: cx-public-ubuntu-x64
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       # Fetch the latest Checkmarx AST CLI version
       - name: Get Latest Checkmarx API version
