@@ -47,7 +47,7 @@ jobs:
     secrets: inherit
     if: inputs.dev == true
   release:
-    runs-on: ubuntu-latest
+    runs-on: cx-public-ubuntu-x64
     env:
       GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       BRANCH_NAME: npm-version-patch
@@ -55,7 +55,7 @@ jobs:
       TAG_NAME: ${{ steps.generate_tag_name.outputs.TAG_NAME }}
       CLI_VERSION: ${{ steps.extract_cli_version.outputs.CLI_VERSION }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 0
 
@@ -64,7 +64,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
 
-      - uses: actions/setup-node@v4.0.2
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 22.11.0
           registry-url: https://npm.pkg.github.com/
