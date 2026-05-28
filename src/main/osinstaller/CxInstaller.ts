@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as tar from 'tar';
 import * as unzipper from 'unzipper';
+import * as crypto from 'crypto';
 import {logger} from "../wrapper/loggerConfig";
 import {AstClient} from "../client/AstClient";
 import {CxError} from "../errors/CxError";
@@ -20,9 +21,9 @@ interface PlatformData {
 export class CxInstaller {
     private readonly platform: SupportedPlatforms;
     private cliVersion: string;
+    private cliChecksum: string | null;
     private readonly resourceDirPath: string;
     private readonly installedCLIVersionFileName = 'cli-version';
-    private readonly cliDefaultVersion = '2.3.48'; // Update this with the latest version.
     private readonly client: AstClient;
 
     private static readonly PLATFORMS: Record<SupportedPlatforms, PlatformData> = {
@@ -31,14 +32,69 @@ export class CxInstaller {
         linux: { platform: linuxOS, extension: 'tar.gz' }
     };
 
+    // Default version and its paired SHA-256 checksums, keyed by "platform_architecture".
+    // Update both together when bumping the default CLI version.
+    private readonly cliDefaultVersion = '2.3.48';
+    private static readonly cliDefaultChecksums: Record<string, string> = {
+        'windows_x64': '441ee8df46cc630ae000f8ba73925113aeed8c4d16cf274944aff3e7197e3470',
+        'darwin_x64':  'b72f7e4ca14e5e56600b07d22c848a4b85e7c37d2e595424340cc699ea10006b',
+        'linux_x64':   'eb3eb55add37f150188f5a8b36b2a659f902ad9569dcb7ee652531fe525022e2',
+        'linux_arm64': '7df61689b3c2bbd4c27face5bdc0da97f63e4533229d6b53dd777f90d3904931',
+        'linux_armv6': '99659f2e0804b197550efc6a9ddb6029babc980d32bdfeeb508199247ac95878'
+    };
+
     constructor(platform: string, client: AstClient) {
         this.platform = platform as SupportedPlatforms;
         this.resourceDirPath = path.join(__dirname, '../wrapper/resources');
         this.client = client;
     }
 
-    async getDownloadURL(): Promise<string> {
-        const cliVersion = await this.readASTCLIVersion();
+    // Returns the CLI version and its platform-specific SHA-256 checksum.
+    // Tries the version file and checksums file first; falls back to the
+    // hardcoded defaults if the version file is absent or empty.
+    // Result is cached after the first read.
+    async readASTCLIVersion(): Promise<{ version: string; checksum: string | null }> {
+        if (this.cliVersion) {
+            return { version: this.cliVersion, checksum: this.cliChecksum };
+        }
+
+        const platformData = CxInstaller.PLATFORMS[this.platform];
+        const architecture = this.getArchitecture();
+        const key = `${platformData.platform}_${architecture}`;
+
+        let version: string | null = null;
+        try {
+            const content = await fsPromises.readFile(this.getVersionFilePath(), 'utf-8');
+            const trimmed = content.trim();
+            if (trimmed) version = trimmed;
+        } catch {
+            // version file absent — fall through to defaults
+        }
+
+        let checksum: string | null;
+        if (version === null) {
+            version = this.cliDefaultVersion;
+            checksum = CxInstaller.cliDefaultChecksums[key] ?? null;
+        } else {
+            try {
+                const content = await fsPromises.readFile(this.getChecksumsFilePath(), 'utf-8');
+                checksum = (JSON.parse(content) as Record<string, string>)[key] ?? null;
+                if (checksum === null) {
+                    logger.warn(`No checksum found for ${key} in checksums file. Download will not be verified.`);
+                }
+            } catch {
+                logger.warn(`Checksums file not found. Download of version ${version} will not be verified.`);
+                checksum = null;
+            }
+        }
+
+        this.cliVersion = version;
+        this.cliChecksum = checksum;
+        return { version, checksum };
+    }
+
+    async getDownloadURL(): Promise<{ url: string; checksum: string | null }> {
+        const { version, checksum } = await this.readASTCLIVersion();
         const platformData = CxInstaller.PLATFORMS[this.platform];
 
         if (!platformData) {
@@ -49,10 +105,16 @@ export class CxInstaller {
 
         const envVar = process.env.CX_CLI_LOCATION;
         if (envVar !== undefined) {
-            return `${envVar}/ast-cli_${cliVersion}_${platformData.platform}_${architecture}.${platformData.extension}`;
+            return {
+                url: `${envVar}/ast-cli_${version}_${platformData.platform}_${architecture}.${platformData.extension}`,
+                checksum: null
+            };
         }
-        
-        return `https://download.checkmarx.com/CxOne/CLI/${cliVersion}/ast-cli_${cliVersion}_${platformData.platform}_${architecture}.${platformData.extension}`;
+
+        return {
+            url: `https://download.checkmarx.com/CxOne/CLI/${version}/ast-cli_${version}_${platformData.platform}_${architecture}.${platformData.extension}`,
+            checksum
+        };
     }
 
     private getArchitecture(): string {
@@ -78,7 +140,7 @@ export class CxInstaller {
     public async downloadIfNotInstalledCLI(): Promise<void> {
         try {
             await fs.promises.mkdir(this.resourceDirPath, {recursive: true});
-            const cliVersion = await this.readASTCLIVersion();
+            const { version: cliVersion } = await this.readASTCLIVersion();
 
             if (this.checkExecutableExists()) {
                 const installedVersion = await this.readInstalledVersionFile(this.resourceDirPath);
@@ -89,10 +151,14 @@ export class CxInstaller {
             }
 
             await this.cleanDirectoryContents(this.resourceDirPath);
-            const url = await this.getDownloadURL();
+            const { url, checksum } = await this.getDownloadURL();
             const zipPath = path.join(this.resourceDirPath, this.getCompressFolderName());
 
             await this.client.downloadFile(url, zipPath);
+
+            if (checksum) {
+                await this.verifyChecksum(zipPath, checksum);
+            }
 
             await this.extractArchive(zipPath, this.resourceDirPath);
             await this.saveVersionFile(this.resourceDirPath, cliVersion);
@@ -183,28 +249,36 @@ export class CxInstaller {
         return fs.existsSync(this.getExecutablePath());
     }
 
-    async readASTCLIVersion(): Promise<string> {
-        if (this.cliVersion) {
-            return this.cliVersion;
-        }
-        try {
-            const versionFilePath = this.getVersionFilePath();
-            const versionContent = await fsPromises.readFile(versionFilePath, 'utf-8');
-            return versionContent.trim();
-        } catch (error) {
-            logger.warn('Error reading AST CLI version: ' + error.message);
-            return this.cliDefaultVersion;
-        }
-    }
-
     private getVersionFilePath(): string {
         return path.join(__dirname, '../../../checkmarx-ast-cli.version');
+    }
+
+    private getChecksumsFilePath(): string {
+        return path.join(__dirname, '../../../checkmarx-ast-cli.checksums');
     }
 
     private getCompressFolderName(): string {
         return `ast-cli.${this.platform === winOS ? 'zip' : 'tar.gz'}`;
     }
-    
+
+    private async verifyChecksum(zipPath: string, expected: string): Promise<void> {
+        const actual = await this.computeSHA256(zipPath);
+        if (actual !== expected) {
+            throw new CxError(`Checksum mismatch for ${path.basename(zipPath)}: expected ${expected}, got ${actual}`);
+        }
+        logger.info(`Checksum verified for ${path.basename(zipPath)}.`);
+    }
+
+    private computeSHA256(filePath: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const hash = crypto.createHash('sha256');
+            fs.createReadStream(filePath)
+                .on('data', chunk => hash.update(chunk))
+                .on('end', () => resolve(hash.digest('hex')))
+                .on('error', reject);
+        });
+    }
+
     public getPlatform(): SupportedPlatforms {
         return this.platform;
     }
