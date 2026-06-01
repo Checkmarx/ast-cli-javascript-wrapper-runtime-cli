@@ -15,24 +15,27 @@ const cxInstallerWindows = new CxInstaller("win32", astClientInstance);
 
 describe("CxInstaller cases", () => {
     it('CxInstaller getDownloadURL Linux Successful case', async () => {
+        const testVersion = '2.3.48';
+        jest.spyOn(cxInstallerLinux as any, 'readASTCLIVersion').mockResolvedValue({ version: testVersion, checksum: null });
         const { url } = await cxInstallerLinux.getDownloadURL();
-        const { version } = await cxInstallerLinux.readASTCLIVersion();
         const architecture = getArchitecture(cxInstallerLinux.getPlatform());
-        expect(url).toBe(`https://download.checkmarx.com/CxOne/CLI/${version}/ast-cli_${version}_linux_${architecture}.tar.gz`);
+        expect(url).toBe(`https://download.checkmarx.com/CxOne/CLI/${testVersion}/ast-cli_${testVersion}_linux_${architecture}.tar.gz`);
     });
 
     it('CxInstaller getDownloadURL Mac Successful case', async () => {
+        const testVersion = '2.3.48';
+        jest.spyOn(cxInstallerMac as any, 'readASTCLIVersion').mockResolvedValue({ version: testVersion, checksum: null });
         const { url } = await cxInstallerMac.getDownloadURL();
-        const { version } = await cxInstallerLinux.readASTCLIVersion();
         const architecture = getArchitecture(cxInstallerMac.getPlatform());
-        expect(url).toBe(`https://download.checkmarx.com/CxOne/CLI/${version}/ast-cli_${version}_darwin_${architecture}.tar.gz`);
+        expect(url).toBe(`https://download.checkmarx.com/CxOne/CLI/${testVersion}/ast-cli_${testVersion}_darwin_${architecture}.tar.gz`);
     });
 
     it('CxInstaller getDownloadURL Windows Successful case', async () => {
+        const testVersion = '2.3.48';
+        jest.spyOn(cxInstallerWindows as any, 'readASTCLIVersion').mockResolvedValue({ version: testVersion, checksum: null });
         const { url } = await cxInstallerWindows.getDownloadURL();
-        const { version } = await cxInstallerLinux.readASTCLIVersion();
         const architecture = getArchitecture(cxInstallerWindows.getPlatform());
-        expect(url).toBe(`https://download.checkmarx.com/CxOne/CLI/${version}/ast-cli_${version}_windows_${architecture}.zip`);
+        expect(url).toBe(`https://download.checkmarx.com/CxOne/CLI/${testVersion}/ast-cli_${testVersion}_windows_${architecture}.zip`);
     });
 });
 

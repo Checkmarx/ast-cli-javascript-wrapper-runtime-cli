@@ -32,16 +32,6 @@ export class CxInstaller {
         linux: { platform: linuxOS, extension: 'tar.gz' }
     };
 
-    // Default version and its paired SHA-256 checksums, keyed by "platform_architecture".
-    // Update both together when bumping the default CLI version.
-    private readonly cliDefaultVersion = '2.3.48';
-    private static readonly cliDefaultChecksums: Record<string, string> = {
-        'windows_x64': '441ee8df46cc630ae000f8ba73925113aeed8c4d16cf274944aff3e7197e3470',
-        'darwin_x64':  'b72f7e4ca14e5e56600b07d22c848a4b85e7c37d2e595424340cc699ea10006b',
-        'linux_x64':   'eb3eb55add37f150188f5a8b36b2a659f902ad9569dcb7ee652531fe525022e2',
-        'linux_arm64': '7df61689b3c2bbd4c27face5bdc0da97f63e4533229d6b53dd777f90d3904931',
-        'linux_armv6': '99659f2e0804b197550efc6a9ddb6029babc980d32bdfeeb508199247ac95878'
-    };
 
     constructor(platform: string, client: AstClient) {
         this.platform = platform as SupportedPlatforms;
@@ -50,8 +40,7 @@ export class CxInstaller {
     }
 
     // Returns the CLI version and its platform-specific SHA-256 checksum.
-    // Tries the version file and checksums file first; falls back to the
-    // hardcoded defaults if the version file is absent or empty.
+    // Reads from version and checksums files. Throws CxError if version is absent or version file is empty.
     // Result is cached after the first read.
     async readASTCLIVersion(): Promise<{ version: string; checksum: string | null }> {
         if (this.cliVersion) {
@@ -68,24 +57,23 @@ export class CxInstaller {
             const trimmed = content.trim();
             if (trimmed) version = trimmed;
         } catch {
-            // version file absent — fall through to defaults
+            // version file absent — will throw error below
+        }
+
+        if (version === null) {
+            throw new CxError(`CLI version not found`);
         }
 
         let checksum: string | null;
-        if (version === null) {
-            version = this.cliDefaultVersion;
-            checksum = CxInstaller.cliDefaultChecksums[key] ?? null;
-        } else {
-            try {
-                const content = await fsPromises.readFile(this.getChecksumsFilePath(), 'utf-8');
-                checksum = (JSON.parse(content) as Record<string, string>)[key] ?? null;
-                if (checksum === null) {
-                    logger.warn(`No checksum found for ${key} in checksums file. Download will not be verified.`);
-                }
-            } catch {
-                logger.warn(`Checksums file not found. Download of version ${version} will not be verified.`);
-                checksum = null;
+        try {
+            const content = await fsPromises.readFile(this.getChecksumsFilePath(), 'utf-8');
+            checksum = (JSON.parse(content) as Record<string, string>)[key] ?? null;
+            if (checksum === null) {
+                logger.warn(`No checksum found for ${key} in checksums file. Download will not be verified.`);
             }
+        } catch {
+            logger.warn(`Checksums file not found. Download of version ${version} will not be verified.`);
+            checksum = null;
         }
 
         this.cliVersion = version;
