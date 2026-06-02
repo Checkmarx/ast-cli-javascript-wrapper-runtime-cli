@@ -21,7 +21,7 @@ interface PlatformData {
 export class CxInstaller {
     private readonly platform: SupportedPlatforms;
     private cliVersion: string;
-    private cliChecksum: string | null;
+    private cliChecksum: string;
     private readonly resourceDirPath: string;
     private readonly installedCLIVersionFileName = 'cli-version';
     private readonly client: AstClient;
@@ -40,9 +40,9 @@ export class CxInstaller {
     }
 
     // Returns the CLI version and its platform-specific SHA-256 checksum.
-    // Reads from version and checksums files. Throws CxError if version is absent or version file is empty.
+    // Throws CxError if the version or checksums file is missing, empty, or has no entry for the current platform.
     // Result is cached after the first read.
-    async readASTCLIVersion(): Promise<{ version: string; checksum: string | null }> {
+    async readASTCLIVersion(): Promise<{ version: string; checksum: string }> {
         if (this.cliVersion) {
             return { version: this.cliVersion, checksum: this.cliChecksum };
         }
@@ -51,29 +51,28 @@ export class CxInstaller {
         const architecture = this.getArchitecture();
         const key = `${platformData.platform}_${architecture}`;
 
-        let version: string | null = null;
+        let version: string;
         try {
             const content = await fsPromises.readFile(this.getVersionFilePath(), 'utf-8');
             const trimmed = content.trim();
-            if (trimmed) version = trimmed;
-        } catch {
-            // version file absent — will throw error below
+            if (!trimmed) throw new CxError('CLI version not found');
+            version = trimmed;
+        } catch (error) {
+            if (error instanceof CxError) throw error;
+            throw new CxError('CLI version not found');
         }
 
-        if (version === null) {
-            throw new CxError(`CLI version not found`);
-        }
-
-        let checksum: string | null;
+        let checksum: string;
         try {
             const content = await fsPromises.readFile(this.getChecksumsFilePath(), 'utf-8');
-            checksum = (JSON.parse(content) as Record<string, string>)[key] ?? null;
-            if (checksum === null) {
-                logger.warn(`No checksum found for ${key} in checksums file. Download will not be verified.`);
+            const parsed = (JSON.parse(content) as Record<string, string>);
+            if (!parsed[key]) {
+                throw new CxError(`No checksum found for ${key} in checksums file.`);
             }
-        } catch {
-            logger.warn(`Checksums file not found. Download of version ${version} will not be verified.`);
-            checksum = null;
+            checksum = parsed[key];
+        } catch (error) {
+            if (error instanceof CxError) throw error;
+            throw new CxError(`Checksums file not found. Download of version ${version} will not be verified.`);
         }
 
         this.cliVersion = version;

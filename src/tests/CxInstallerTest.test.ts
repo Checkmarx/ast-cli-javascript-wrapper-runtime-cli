@@ -3,6 +3,7 @@ import { anyString, mock, instance, when, verify } from "ts-mockito";
 import { AstClient } from "../main/client/AstClient";
 import * as fs from "fs";
 import * as crypto from "crypto";
+import * as path from "path";
 
 // Mock AstClient and set up an instance from it
 const astClientMock = mock(AstClient);
@@ -16,7 +17,7 @@ const cxInstallerWindows = new CxInstaller("win32", astClientInstance);
 describe("CxInstaller cases", () => {
     it('CxInstaller getDownloadURL Linux Successful case', async () => {
         const testVersion = '2.3.48';
-        jest.spyOn(cxInstallerLinux as any, 'readASTCLIVersion').mockResolvedValue({ version: testVersion, checksum: null });
+        jest.spyOn(cxInstallerLinux as any, 'readASTCLIVersion').mockResolvedValue({ version: testVersion, checksum: 'mock-checksum' });
         const { url } = await cxInstallerLinux.getDownloadURL();
         const architecture = getArchitecture(cxInstallerLinux.getPlatform());
         expect(url).toBe(`https://download.checkmarx.com/CxOne/CLI/${testVersion}/ast-cli_${testVersion}_linux_${architecture}.tar.gz`);
@@ -24,7 +25,7 @@ describe("CxInstaller cases", () => {
 
     it('CxInstaller getDownloadURL Mac Successful case', async () => {
         const testVersion = '2.3.48';
-        jest.spyOn(cxInstallerMac as any, 'readASTCLIVersion').mockResolvedValue({ version: testVersion, checksum: null });
+        jest.spyOn(cxInstallerMac as any, 'readASTCLIVersion').mockResolvedValue({ version: testVersion, checksum: 'mock-checksum' });
         const { url } = await cxInstallerMac.getDownloadURL();
         const architecture = getArchitecture(cxInstallerMac.getPlatform());
         expect(url).toBe(`https://download.checkmarx.com/CxOne/CLI/${testVersion}/ast-cli_${testVersion}_darwin_${architecture}.tar.gz`);
@@ -32,7 +33,7 @@ describe("CxInstaller cases", () => {
 
     it('CxInstaller getDownloadURL Windows Successful case', async () => {
         const testVersion = '2.3.48';
-        jest.spyOn(cxInstallerWindows as any, 'readASTCLIVersion').mockResolvedValue({ version: testVersion, checksum: null });
+        jest.spyOn(cxInstallerWindows as any, 'readASTCLIVersion').mockResolvedValue({ version: testVersion, checksum: 'mock-checksum' });
         const { url } = await cxInstallerWindows.getDownloadURL();
         const architecture = getArchitecture(cxInstallerWindows.getPlatform());
         expect(url).toBe(`https://download.checkmarx.com/CxOne/CLI/${testVersion}/ast-cli_${testVersion}_windows_${architecture}.zip`);
@@ -42,17 +43,17 @@ describe("CxInstaller cases", () => {
 describe("CxInstaller getExecutablePath cases", () => {
     it('CxInstaller getExecutablePath Linux Successful case', () => {
         const executablePath = cxInstallerLinux.getExecutablePath();
-        expect(executablePath).toContain(`src/main/wrapper/resources/cx`);
+        expect(executablePath).toContain(path.join('src', 'main', 'wrapper', 'resources', 'cx'));
     });
 
     it('CxInstaller getExecutablePath Mac Successful case', () => {
         const executablePath = cxInstallerMac.getExecutablePath();
-        expect(executablePath).toContain(`src/main/wrapper/resources/cx`);
+        expect(executablePath).toContain(path.join('src', 'main', 'wrapper', 'resources', 'cx'));
     });
 
     it('CxInstaller getExecutablePath Windows Successful case', () => {
         const executablePath = cxInstallerWindows.getExecutablePath();
-        expect(executablePath).toContain(`src/main/wrapper/resources/cx.exe`);
+        expect(executablePath).toContain(path.join('src', 'main', 'wrapper', 'resources', 'cx.exe'));
     });
 });
 
@@ -141,13 +142,6 @@ describe("CxInstaller checksum verification cases", () => {
         });
         await localLinux.downloadIfNotInstalledCLI();
         expect(exitSpy).toHaveBeenCalledWith(1);
-    });
-
-    it('CxInstaller null checksum skips verification', async () => {
-        jest.spyOn(localLinux as any, 'readASTCLIVersion').mockResolvedValue({ version: '9.9.99', checksum: null });
-        when(localMock.downloadFile(anyString(), anyString())).thenResolve();
-        await localLinux.downloadIfNotInstalledCLI();
-        expect(exitSpy).not.toHaveBeenCalled();
     });
 
     it('CxInstaller CX_CLI_LOCATION skips checksum verification', async () => {
