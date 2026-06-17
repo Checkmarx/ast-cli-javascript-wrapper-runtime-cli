@@ -772,7 +772,9 @@
 		"xml2js": "^0.6.0",
 		"semver": "^7.5.4",
 		"minimatch": "^9.0.0",
-		"undici": ">=6.21.3"
+		"undici": ">=6.21.3",
+		"picomatch": "^2.3.2",
+		"brace-expansion": "^2.0.3"
 	},
 	"displayName": "Checkmarx",
 	"engines": {
