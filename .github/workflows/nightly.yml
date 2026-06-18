@@ -1,9 +1,7 @@
 name: Nightly Release
 
 permissions:
-  id-token: write
-  contents: write
-  packages: write
+  contents: read
 
 on:
   push:
