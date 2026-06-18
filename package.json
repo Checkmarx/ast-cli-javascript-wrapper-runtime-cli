@@ -63,7 +63,7 @@
     "underscore": "^1.13.8",
     "picomatch": "^2.3.2",
     "brace-expansion": "^2.0.3",
-    "uuid": "^9.0.0"
+    "uuid": "^3.4.0"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"

@@ -1,0 +1,809 @@
+{
+	"activationEvents": [
+		"*"
+	],
+	"bugs": {
+		"url": "https://github.com/CheckmarxDev/ast-vscode-extension/issues"
+	},
+	"categories": [
+		"Other"
+	],
+	"contributes": {
+		"commands": [
+			{
+				"command": "ast-results.newDetails",
+				"title": "Details"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.viewResult",
+				"enablement": "ast-results.isValidCredentials",
+				"icon": "$(eye)",
+				"title": "View"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.viewSettings",
+				"icon": "$(gear)",
+				"title": "Settings"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.viewKicsSaveSettings",
+				"icon": "$(gear)",
+				"title": "Kics save settings"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.refreshTree",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Refresh tree"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.kicsRealtime",
+				"title": "Run kics realtime scan"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.clear",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Clear selections"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupBySeverityActive",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "✓ Group by: Severity"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupByLanguageActive",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "✓ Group by: Language"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupByStatusActive",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "✓ Group by: Status"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupByFileActive",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "✓ Group by: File"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupByStateActive",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "✓ Group by: State"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupByQueryNameActive",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "✓ Group by: Vulnerability Type"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupBySeverity",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "­­­ ­­ ­ ­ ­Group by: Severity"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupByLanguage",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "­­­ ­­ ­ ­ ­Group by: Language"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupByStatus",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "­­­ ­­ ­ ­ ­Group by: Status"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupByFile",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "­­­ ­­ ­ ­ ­Group by: File"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupByState",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "­­­ ­­ ­ ­ ­Group by: State"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupByQueryName",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "­­­ ­­ ­ ­ ­Group by: Vulnerability Type"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupBySeverities",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Group by: Severity"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupByLanguages",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Group by: Language"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupByStatuses",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Group by: Status"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupByFiles",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Group by: File"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupByStates",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Group by: State"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.groupByQueryNames",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Group by: Vulnerability Type"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.clear",
+				"enablement": "ast-results.isValidCredentials",
+				"icon": "$(refresh)",
+				"title": "Clear selections"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterHigh_toggle",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"icon": "media/icons/high_toggle.svg",
+				"title": "HIGH"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterHigh_untoggle",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"icon": "media/icons/high_untoggle.svg",
+				"title": "HIGH"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterMedium_toggle",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"icon": "media/icons/medium_toggle.svg",
+				"title": "MEDIUM"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterMedium_untoggle",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"icon": "media/icons/medium_untoggle.svg",
+				"title": "MEDIUM"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterLow_toggle",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"icon": "media/icons/low_toggle.svg",
+				"title": "LOW"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterLow_untoggle",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"icon": "media/icons/low_untoggle.svg",
+				"title": "LOW"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterInfo_toggle",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"icon": "media/icons/info_toggle.svg",
+				"title": "INFO"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterInfo_untoggle",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"icon": "media/icons/info_untoggle.svg",
+				"title": "INFO"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterHigh",
+				"enablement": "ast-results.isValidCredentials",
+				"icon": "media/icons/high_untoggle.svg",
+				"title": "Filter severity: High"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterMedium",
+				"enablement": "ast-results.isValidCredentials",
+				"icon": "media/icons/medium_toggle.svg",
+				"title": "Filter severity: Medium"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterLow",
+				"enablement": "ast-results.isValidCredentials",
+				"icon": "media/icons/low_toggle.svg",
+				"title": "Filter severity: Low"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterInfo",
+				"enablement": "ast-results.isValidCredentials",
+				"icon": "media/icons/info_toggle.svg",
+				"title": "Filter severity: Info"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.generalPick",
+				"enablement": "ast-results.isValidCredentials",
+				"icon": "$(search)",
+				"title": "Select All"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.projectPick",
+				"enablement": "ast-results.isValidCredentials",
+				"icon": "$(edit)",
+				"title": "Select Project"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.branchPick",
+				"enablement": "ast-results.isValidCredentials",
+				"icon": "$(edit)",
+				"title": "Select Branch"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.scanPick",
+				"enablement": "ast-results.isValidCredentials",
+				"icon": "$(edit)",
+				"title": "Select Scan"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.scanInput",
+				"enablement": "ast-results.isValidCredentials",
+				"icon": "$(search)",
+				"title": "Look for Scan"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterNotExploitableActive",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "✓ Filter: Not Exploitable"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterUrgentActive",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "✓ Filter: Urgent"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterProposedActive",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "✓ Filter: Proposed Not Exploitable"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterConfirmedActive",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "✓ Filter: Confirmed"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterToConfirmActive",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "✓ Filter: To Vonfirm"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterToVerifyActive",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "✓ Filter: To Verify"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterNotIgnoredActive",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "✓ Filter: Not Ignored"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterIgnoredActive",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "✓ Filter: Ignored"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterNotExploitable",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "­­­ ­­ ­ ­ ­Filter: Not Exploitable"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterUrgent",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "­­­ ­­ ­ ­ ­Filter: Urgent"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterProposed",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "­­­ ­­ ­ ­ ­Filter: Proposed Not Exploitable"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterConfirmed",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "­­­ ­­ ­ ­ ­Filter: Confirmed"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterToConfirm",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "­­­ ­­ ­ ­ ­Filter: To Confirm"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterToVerify",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "­­­ ­­ ­ ­ ­Filter: To Verify"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterNotIgnored",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "­­­ ­­ ­ ­ ­Filter: Not Ignored"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterIgnored",
+				"enablement": "ast-results.isValidCredentials \u0026\u0026 view == astResults",
+				"title": "­­­ ­­ ­ ­ ­Filter: Ignored"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterNotExploitables",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Filter: Not Exploitable"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterUrgents",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Filter: Urgent"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterProposeds",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Filter: Proposed Not Exploitable"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterConfirmeds",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Filter: Confirmed"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterToConfirms",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Filter: To Confirm"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterToVerifies",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Filter: To Verify"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterIgnoreds",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Filter: Ignored"
+			},
+			{
+				"category": "checkmarx-ast",
+				"command": "ast-results.filterNotIgnoreds",
+				"enablement": "ast-results.isValidCredentials",
+				"title": "Filter: Not Ignored"
+			}
+		],
+		"configuration": [
+			{
+				"id": "checkmarx-ast",
+				"order": 2,
+				"properties": {
+					"checkmarxAST.apiKey": {
+						"description": "AST API KEY for authentication",
+						"order": 5,
+						"properties": {
+							"default": "",
+							"type": "string"
+						},
+						"type": "string"
+					},
+					"checkmarxAST.baseAuthUri": {
+						"description": "AST Server authentication server URI",
+						"order": 3,
+						"properties": {
+							"default": "",
+							"type": "string"
+						},
+						"type": "string"
+					},
+					"checkmarxAST.baseUri": {
+						"description": "AST Server URI",
+						"order": 2,
+						"properties": {
+							"default": "",
+							"type": "string"
+						},
+						"type": "string"
+					},
+					"checkmarxAST.tenant": {
+						"description": "AST Tenant for authentication",
+						"order": 4,
+						"properties": {
+							"default": "",
+							"type": "string"
+						},
+						"type": "string"
+					}
+				},
+				"title": "Checkmarx AST results"
+			},
+			{
+				"id": "kics-ast",
+				"order": 1,
+				"properties": {
+					"CheckmarxKICS.Activate KICS Auto Scanning": {
+						"default": true,
+						"markdownDescription": "Scans your infrastructure as code files for vulnerabilities, upon file save. **No Checkmarx credentials required.** [Read more](https://checkmarx.atlassian.net/wiki/spaces/AST/pages/6415286273/KICS+Auto+Scanning+Extension+for+Visual+Studio+Code).",
+						"order": 3,
+						"type": "boolean"
+					},
+					"CheckmarxKICS.Additional Parameters": {
+						"default": "",
+						"markdownDescription": "Customize the scan configuration using KICS scan command flags, [see KICS help page](https://docs.kics.io/latest/commands/).",
+						"order": 4,
+						"type": "string"
+					}
+				},
+				"title": "Checkmarx KICS Auto Scanning"
+			}
+		],
+		"menus": {
+			"ast-results.filterBy": [
+				{
+					"command": "ast-results.filterNotExploitableActive",
+					"group": "navigation@3",
+					"when": "ast-results-NotExploitable"
+				},
+				{
+					"command": "ast-results.filterProposedActive",
+					"group": "navigation@5",
+					"when": "ast-results-Proposed"
+				},
+				{
+					"command": "ast-results.filterConfirmedActive",
+					"group": "navigation@1",
+					"when": "ast-results-Confirmed"
+				},
+				{
+					"command": "ast-results.filterToVerifyActive",
+					"group": "navigation@6",
+					"when": "ast-results-ToVerify"
+				},
+				{
+					"command": "ast-results.filterUrgentActive",
+					"group": "navigation@7",
+					"when": "ast-results-Urgent"
+				},
+				{
+					"command": "ast-results.filterNotIgnoredActive",
+					"group": "navigation@4",
+					"when": "ast-results-NotIgnored"
+				},
+				{
+					"command": "ast-results.filterIgnoredActive",
+					"group": "navigation@2",
+					"when": "ast-results-Ignored"
+				},
+				{
+					"command": "ast-results.filterNotExploitable",
+					"group": "navigation@3",
+					"when": "!ast-results-NotExploitable"
+				},
+				{
+					"command": "ast-results.filterProposed",
+					"group": "navigation@5",
+					"when": "!ast-results-Proposed"
+				},
+				{
+					"command": "ast-results.filterConfirmed",
+					"group": "navigation@1",
+					"when": "!ast-results-Confirmed"
+				},
+				{
+					"command": "ast-results.filterToVerify",
+					"group": "navigation@6",
+					"when": "!ast-results-ToVerify"
+				},
+				{
+					"command": "ast-results.filterUrgent",
+					"group": "navigation@7",
+					"when": "!ast-results-Urgent"
+				},
+				{
+					"command": "ast-results.filterNotIgnored",
+					"group": "navigation@4",
+					"when": "!ast-results-NotIgnored"
+				},
+				{
+					"command": "ast-results.filterIgnored",
+					"group": "navigation@2",
+					"when": "!ast-results-Ignored"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "ast-results.projectPick",
+					"group": "inline",
+					"when": "viewItem == project-item"
+				},
+				{
+					"command": "ast-results.branchPick",
+					"group": "inline",
+					"when": "viewItem == branch-item"
+				},
+				{
+					"command": "ast-results.scanPick",
+					"group": "inline",
+					"when": "viewItem == scan-item"
+				},
+				{
+					"command": "ast-results.scanInput",
+					"group": "inline",
+					"when": "viewItem == scan-item"
+				}
+			],
+			"view/title": [
+				{
+					"command": "ast-results.filterHigh_untoggle",
+					"group": "navigation@1",
+					"when": "view == astResults \u0026\u0026 ast-results-high"
+				},
+				{
+					"command": "ast-results.filterHigh_toggle",
+					"group": "navigation@1",
+					"when": "view == astResults \u0026\u0026 !ast-results-high"
+				},
+				{
+					"command": "ast-results.filterMedium_untoggle",
+					"group": "navigation@2",
+					"when": "view == astResults \u0026\u0026 ast-results-medium"
+				},
+				{
+					"command": "ast-results.filterMedium_toggle",
+					"group": "navigation@2",
+					"when": "view == astResults \u0026\u0026 !ast-results-medium"
+				},
+				{
+					"command": "ast-results.filterLow_untoggle",
+					"group": "navigation@3",
+					"when": "view == astResults \u0026\u0026 ast-results-low"
+				},
+				{
+					"command": "ast-results.filterLow_toggle",
+					"group": "navigation@3",
+					"when": "view == astResults \u0026\u0026 !ast-results-low"
+				},
+				{
+					"command": "ast-results.filterInfo_untoggle",
+					"group": "navigation@4",
+					"when": "view == astResults \u0026\u0026 ast-results-info"
+				},
+				{
+					"command": "ast-results.filterInfo_toggle",
+					"group": "navigation@4",
+					"when": "view == astResults \u0026\u0026 !ast-results-info"
+				},
+				{
+					"command": "ast-results.groupBySeverity",
+					"group": "@groupBy@4",
+					"when": "view == astResults \u0026\u0026 !ast-results-groupBySeverity"
+				},
+				{
+					"command": "ast-results.groupByStatus",
+					"group": "@groupBy@6",
+					"when": "view == astResults \u0026\u0026 !ast-results-groupByStatus"
+				},
+				{
+					"command": "ast-results.groupByLanguage",
+					"group": "@groupBy@2",
+					"when": "view == astResults \u0026\u0026 !ast-results-groupByLanguage"
+				},
+				{
+					"command": "ast-results.groupByFile",
+					"group": "@groupBy@1",
+					"when": "view == astResults \u0026\u0026 !ast-results-groupByFile"
+				},
+				{
+					"command": "ast-results.groupByState",
+					"group": "@groupBy@5",
+					"when": "view == astResults \u0026\u0026 !ast-results-groupByState"
+				},
+				{
+					"command": "ast-results.groupByQueryName",
+					"group": "@groupBy@3",
+					"when": "view == astResults \u0026\u0026 !ast-results-groupByQueryName"
+				},
+				{
+					"command": "ast-results.groupBySeverityActive",
+					"group": "@groupBy@4",
+					"when": "view == astResults \u0026\u0026 ast-results-groupBySeverity"
+				},
+				{
+					"command": "ast-results.groupByStatusActive",
+					"group": "@groupBy@6",
+					"when": "view == astResults \u0026\u0026 ast-results-groupByStatus"
+				},
+				{
+					"command": "ast-results.groupByLanguageActive",
+					"group": "@groupBy@2",
+					"when": "view == astResults \u0026\u0026 ast-results-groupByLanguage"
+				},
+				{
+					"command": "ast-results.groupByFileActive",
+					"group": "@groupBy@1",
+					"when": "view == astResults \u0026\u0026 ast-results-groupByFile"
+				},
+				{
+					"command": "ast-results.groupByStateActive",
+					"group": "@groupBy@5",
+					"when": "view == astResults \u0026\u0026 ast-results-groupByState"
+				},
+				{
+					"command": "ast-results.groupByQueryNameActive",
+					"group": "@groupBy@3",
+					"when": "view == astResults \u0026\u0026 ast-results-groupByQueryName"
+				},
+				{
+					"command": "ast-results.viewSettings",
+					"group": "@settings@2",
+					"when": "view == astResults"
+				},
+				{
+					"command": "ast-results.clear",
+					"group": "@settings@1",
+					"when": "view == astResults"
+				},
+				{
+					"command": "ast-results.generalPick",
+					"group": "navigation@5",
+					"when": "view == astResults"
+				},
+				{
+					"group": "navigation@5",
+					"submenu": "ast-results.filterBy",
+					"when": "view == astResults"
+				}
+			]
+		},
+		"submenus": [
+			{
+				"enablement": "ast-results.isValidCredentials",
+				"icon": "$(filter)",
+				"id": "ast-results.filterBy",
+				"label": "Filter"
+			}
+		],
+		"views": {
+			"astView": [
+				{
+					"id": "astResults",
+					"name": "Results",
+					"type": "tree"
+				}
+			]
+		},
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"icon": "media/cx-icon.svg",
+					"id": "astView",
+					"title": "Checkmarx"
+				}
+			]
+		},
+		"viewsWelcome": [
+			{
+				"contents": "In order to use Checkarmx AST, you need to setup your credentials.\n[Open settings](command:ast-results.viewSettings)\nTo learn more about how to use Checkmarx AST [read our docs](https://checkmarx.atlassian.net/wiki/x/AwBwagE).",
+				"view": "astResults",
+				"when": "!ast-results.isValidCredentials"
+			}
+		]
+	},
+	"dependencies": {
+		"copyfiles": "1.2",
+		"tree-kill": "^1.2.2"
+	},
+	"description": "Beat vulnerabilities with more-secure code",
+	"devDependencies": {
+		"@types/chai": "4.3.1",
+		"@types/mocha": "9.1.1",
+		"@types/node": "^18.0.0",
+		"@types/vscode": "^1.50.0",
+		"@typescript-eslint/eslint-plugin": "^5.29.0",
+		"@typescript-eslint/parser": "^5.29.0",
+		"chai": "4.3.6",
+		"eslint": "^8.18.0",
+		"mocha": "10.1.0",
+		"typescript": "^4.7.4",
+		"vsce": "^2.9.2",
+		"vscode-extension-tester": "^8.13.0",
+		"vscode-extension-tester-locators": "^3.11.0",
+		"webpack": "^5.104.1",
+		"webpack-cli": "^4.10.0"
+	},
+	"overrides": {
+		"bluebird": "3.7.2",
+		"xml2js": "^0.6.0",
+		"semver": "^7.5.4",
+		"minimatch": "^9.0.0",
+		"undici": ">=6.21.3",
+		"picomatch": "^2.3.2",
+		"brace-expansion": "^2.0.3"
+	},
+	"displayName": "Checkmarx",
+	"engines": {
+		"vscode": "^1.56.2"
+	},
+	"extensionDependencies": [
+		"vscode.git"
+	],
+	"extensionKind": [
+		"ui",
+		"workspace"
+	],
+	"homepage": "https://github.com/CheckmarxDev/ast-vscode-extension#readme",
+	"icon": "media/icon.png",
+	"main": "./out/extension.js",
+	"name": "ast-results",
+	"publisher": "checkmarx",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/CheckmarxDev/ast-vscode-extension.git"
+	},
+	"scripts": {
+		"compile": "tsc -p ./ \u0026\u0026 npm run copytestproject \u0026\u0026 npm run copymedia",
+		"copymedia": "copyfiles \"media/icons/*\" out/ -E",
+		"copytestproject": "copyfiles -u 2 \"src/resources/**/*\" out/test/ -E",
+		"lint": "eslint . --ext .ts,.tsx",
+		"test": "npm run compile \u0026\u0026 extest setup-and-run './out/test/**/*test.js'",
+		"vscode:prepublish": "npm run compile",
+		"watch": "tsc -w -p ./ \u0026\u0026 npm run copytestproject"
+	},
+	"version": "2.0.4"
+}
