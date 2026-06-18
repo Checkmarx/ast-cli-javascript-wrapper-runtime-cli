@@ -6,8 +6,6 @@ on:
       new_cli_version:
         description: 'New CLI version (optional)'
         required: false
-  repository_dispatch:
-    types: [cli-version-update]
 
 permissions:
   contents: read
@@ -29,8 +27,8 @@ jobs:
             LATEST_VERSION=$(curl -sL https://api.github.com/repos/Checkmarx/ast-cli/releases/latest | jq -r ".tag_name")
           fi
           CURRENT_VERSION=$(<checkmarx-ast-cli.version)
-          echo ::set-output name=release_tag::$LATEST_VERSION
-          echo ::set-output name=current_tag::$CURRENT_VERSION
+          echo "release_tag=$LATEST_VERSION" >> $GITHUB_OUTPUT
+          echo "current_tag=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
       # Update the version file if the latest version differs
       - name: Update Checkmarx CLI version in version file
