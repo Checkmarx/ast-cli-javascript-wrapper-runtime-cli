@@ -13,10 +13,11 @@ const astClientInstance = instance(astClientMock);
 const cxInstallerLinux = new CxInstaller("linux", astClientInstance);
 const cxInstallerMac = new CxInstaller("darwin", astClientInstance);
 const cxInstallerWindows = new CxInstaller("win32", astClientInstance);
+ const testVersion = '2.3.54';
 
 describe("CxInstaller cases", () => {
     it('CxInstaller getDownloadURL Linux Successful case', async () => {
-        const testVersion = '2.3.48';
+        
         jest.spyOn(cxInstallerLinux as any, 'readASTCLIVersion').mockResolvedValue({ version: testVersion, checksum: 'mock-checksum' });
         const { url } = await cxInstallerLinux.getDownloadURL();
         const architecture = getArchitecture(cxInstallerLinux.getPlatform());
@@ -24,7 +25,7 @@ describe("CxInstaller cases", () => {
     });
 
     it('CxInstaller getDownloadURL Mac Successful case', async () => {
-        const testVersion = '2.3.48';
+        
         jest.spyOn(cxInstallerMac as any, 'readASTCLIVersion').mockResolvedValue({ version: testVersion, checksum: 'mock-checksum' });
         const { url } = await cxInstallerMac.getDownloadURL();
         const architecture = getArchitecture(cxInstallerMac.getPlatform());
@@ -32,7 +33,7 @@ describe("CxInstaller cases", () => {
     });
 
     it('CxInstaller getDownloadURL Windows Successful case', async () => {
-        const testVersion = '2.3.48';
+        
         jest.spyOn(cxInstallerWindows as any, 'readASTCLIVersion').mockResolvedValue({ version: testVersion, checksum: 'mock-checksum' });
         const { url } = await cxInstallerWindows.getDownloadURL();
         const architecture = getArchitecture(cxInstallerWindows.getPlatform());
