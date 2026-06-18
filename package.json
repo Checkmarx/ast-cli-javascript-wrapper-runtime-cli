@@ -1,6 +1,6 @@
 {
   "name": "@Checkmarx/ast-cli-javascript-wrapper-runtime-cli",
-  "version": "1.0.36",
+  "version": "1.0.37",
   "description": "AST CLI Javascript wrapper runtime CLI",
   "main": "dist/main/wrapper/CxWrapper.js",
   "typings": "dist/main/wrapper/CxWrapper.d.ts",
@@ -60,7 +60,10 @@
     "flatted": "^3.4.2",
     "lodash": "^4.18.0",
     "minimatch": "^3.1.2",
-    "underscore": "^1.13.8"
+    "underscore": "^1.13.8",
+    "picomatch": "^2.3.2",
+    "brace-expansion": "^2.0.3",
+    "uuid": "^9.0.0"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"

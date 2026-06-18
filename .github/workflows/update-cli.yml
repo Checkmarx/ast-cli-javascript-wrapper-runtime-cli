@@ -6,8 +6,6 @@ on:
       new_cli_version:
         description: 'New CLI version (optional)'
         required: false
-  repository_dispatch:
-    types: [cli-version-update]
 
 permissions:
   contents: read
@@ -29,8 +27,8 @@ jobs:
             LATEST_VERSION=$(curl -sL https://api.github.com/repos/Checkmarx/ast-cli/releases/latest | jq -r ".tag_name")
           fi
           CURRENT_VERSION=$(<checkmarx-ast-cli.version)
-          echo ::set-output name=release_tag::$LATEST_VERSION
-          echo ::set-output name=current_tag::$CURRENT_VERSION
+          echo "release_tag=$LATEST_VERSION" >> $GITHUB_OUTPUT
+          echo "current_tag=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
       # Update the version file if the latest version differs
       - name: Update Checkmarx CLI version in version file
@@ -40,15 +38,56 @@ jobs:
         run: |
           echo ${{ steps.checkmarx-ast-cli.outputs.release_tag }} > checkmarx-ast-cli.version
 
-      # Update the TypeScript file's cliDefaultVersion field
-      - name: Update cliDefaultVersion in CxInstaller.ts
+      # Download CLI binaries and generate checksums
+      - name: Download CLI and generate checksums
         if: steps.checkmarx-ast-cli.outputs.current_tag != steps.checkmarx-ast-cli.outputs.release_tag
         env:
-          NEW_CLI_VERSION: ${{ steps.checkmarx-ast-cli.outputs.release_tag }}
+          RELEASE_TAG: ${{ steps.checkmarx-ast-cli.outputs.release_tag }}
         run: |
-          FILE_PATH="src/main/osinstaller/CxInstaller.ts"
-          # Ensure that 'cliDefaultVersion' is updated correctly
-          sed -i "s/\(cliDefaultVersion = '\)[^']*\(';\)/\1${NEW_CLI_VERSION}\2/" $FILE_PATH
+          VERSION=$RELEASE_TAG
+
+          # Initialize checksums object
+          CHECKSUMS='{}'
+
+          # Platform configurations: platform_name,architecture,extension,os_platform
+          PLATFORMS=(
+            "windows,x64,zip,windows"
+            "darwin,x64,tar.gz,darwin"
+            "linux,x64,tar.gz,linux"
+            "linux,arm64,tar.gz,linux"
+            "linux,armv6,tar.gz,linux"
+          )
+
+          for PLATFORM_CONFIG in "${PLATFORMS[@]}"; do
+            IFS=',' read -r OS_TYPE ARCH EXT OS_PLATFORM <<< "$PLATFORM_CONFIG"
+
+            KEY="${OS_PLATFORM}_${ARCH}"
+            URL="https://download.checkmarx.com/CxOne/CLI/${VERSION}/ast-cli_${VERSION}_${OS_PLATFORM}_${ARCH}.${EXT}"
+
+            echo "Downloading checksum for ${KEY} from ${URL}..."
+
+            # Download binary
+            TEMP_FILE="/tmp/ast-cli_${KEY}.${EXT}"
+            if curl -sL -o "$TEMP_FILE" "$URL"; then
+              # Calculate SHA-256
+              CHECKSUM=$(sha256sum "$TEMP_FILE" | awk '{print $1}')
+              echo "✓ ${KEY}: ${CHECKSUM}"
+
+              # Update checksums JSON
+              CHECKSUMS=$(echo "$CHECKSUMS" | jq --arg key "$KEY" --arg value "$CHECKSUM" '.[$key] = $value')
+
+              # Cleanup
+              rm -f "$TEMP_FILE"
+            else
+              echo "✗ Failed to download ${KEY}"
+              exit 1
+            fi
+          done
+
+          # Write checksums to file
+          echo "$CHECKSUMS" | jq '.' > checkmarx-ast-cli.checksums
+          echo "Checksums updated:"
+          cat checkmarx-ast-cli.checksums
 
       # Create a Pull Request with the version changes
       - name: Create Pull Request
