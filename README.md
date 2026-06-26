@@ -53,8 +53,8 @@ To be able to build the code you should have:
 ### Setting Up
 
 In your terminal, run:
-```
-- npm install
+```bash
+npm ci
 ```
 
 To run integrations tests, you need to set up environment variables:

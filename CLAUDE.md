@@ -188,7 +188,7 @@ CxWrapper (Main Entry Point)
 
 2. **Install dependencies**
    ```bash
-   npm install
+   npm ci
    ```
 
 3. **Verify installation**
