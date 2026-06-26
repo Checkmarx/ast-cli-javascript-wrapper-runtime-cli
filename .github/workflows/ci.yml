@@ -9,6 +9,16 @@ jobs:
     runs-on: cx-public-ubuntu-x64
     steps:
     - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+    - name: Verify single lockfile (Step 0 - Supply Chain Policy)
+      run: |
+        if [ -f yarn.lock ] && [ -f package-lock.json ]; then
+          echo "❌ ERROR: Both yarn.lock and package-lock.json found. Policy requires exactly ONE package manager. Allowed: npm + package-lock.json OR Yarn + yarn.lock"
+          exit 1
+        fi
+        if [ ! -f yarn.lock ] && [ ! -f package-lock.json ]; then
+          echo "❌ ERROR: No lockfile found. Policy requires exactly ONE package manager lockfile. Required: npm + package-lock.json OR Yarn + yarn.lock"
+          exit 1
+        fi
     - name: Use Node.js 22.11.0
       uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
       with:
@@ -22,6 +32,16 @@ jobs:
     runs-on: cx-public-ubuntu-x64
     steps:
     - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+    - name: Verify single lockfile (Step 0 - Supply Chain Policy)
+      run: |
+        if [ -f yarn.lock ] && [ -f package-lock.json ]; then
+          echo "❌ ERROR: Both yarn.lock and package-lock.json found. Policy requires exactly ONE package manager. Allowed: npm + package-lock.json OR Yarn + yarn.lock"
+          exit 1
+        fi
+        if [ ! -f yarn.lock ] && [ ! -f package-lock.json ]; then
+          echo "❌ ERROR: No lockfile found. Policy requires exactly ONE package manager lockfile. Required: npm + package-lock.json OR Yarn + yarn.lock"
+          exit 1
+        fi
     - name: Use Node.js 22.11.0
       uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
       with:

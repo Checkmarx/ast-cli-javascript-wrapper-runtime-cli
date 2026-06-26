@@ -74,7 +74,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Git Configuration 
+      - name: Verify single lockfile (Step 0 - Supply Chain Policy)
+        run: |
+          if [ -f yarn.lock ] && [ -f package-lock.json ]; then
+            echo "❌ ERROR: Both yarn.lock and package-lock.json found. Policy requires exactly ONE package manager. Allowed: npm + package-lock.json OR Yarn + yarn.lock"
+            exit 1
+          fi
+          if [ ! -f yarn.lock ] && [ ! -f package-lock.json ]; then
+            echo "❌ ERROR: No lockfile found. Policy requires exactly ONE package manager lockfile. Required: npm + package-lock.json OR Yarn + yarn.lock"
+            exit 1
+          fi
+      - name: Git Configuration
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
