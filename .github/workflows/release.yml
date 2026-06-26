@@ -137,7 +137,7 @@ jobs:
 
       - name: NPM ci and build
         run: |
-          npm ci
+          npm ci --ignore-scripts
           npm run build
 
       - name: Create Pull Request
