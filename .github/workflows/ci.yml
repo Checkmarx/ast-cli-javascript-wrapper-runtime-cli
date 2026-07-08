@@ -1,9 +1,9 @@
 name: AST Javascript wrapper CI
- 
+
 on: [ pull_request ]
 permissions:
   contents: read
- 
+
 jobs:
   unit-tests:
     runs-on: cx-public-ubuntu-x64
@@ -34,7 +34,7 @@ jobs:
       env:
         ECHO_LIBRARIES_ACCESS_KEY: ${{ secrets.ECHO_LIBRARIES_ACCESS_KEY }}
     - name: Run Unit Tests
- 
+
       run: npm run test:unit
   integration-tests:
     runs-on: cx-public-ubuntu-x64
@@ -67,7 +67,7 @@ jobs:
     - name: Code Linting
       run: npm run lint
     - run: npm run build --if-present
- 
+
     - name: Run tests
       env:
         CX_CLIENT_ID: ${{ secrets.CX_CLIENT_ID}}
