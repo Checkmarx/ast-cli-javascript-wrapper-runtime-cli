@@ -1,5 +1,5 @@
 name: Javascript Wrapper Release
-
+ 
 on:
   workflow_call:
     inputs:
@@ -43,10 +43,10 @@ on:
         required: false
         default: true
         type: boolean
-
+ 
 permissions:
   contents: read
-
+ 
 jobs:
   delete:
     permissions:
@@ -73,11 +73,11 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 0
-
+ 
       - name: Verify single lockfile (Step 0 - Supply Chain Policy)
         run: |
           if [ -f yarn.lock ] && [ -f package-lock.json ]; then
-            echo "❌ ERROR: Both yarn.lock and package-lock.json found. Policy requires exactly ONE package manager. Allowed: npm + package-lock.json OR Yarn + yarn.lock"
+             "❌ ERROR: Both yarn.lock and package-lock.json found. Policy requires exactly ONE package manager. Allowed: npm + package-lock.json OR Yarn + yarn.lock"
             exit 1
           fi
           if [ ! -f yarn.lock ] && [ ! -f package-lock.json ]; then
@@ -88,17 +88,17 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-
+ 
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 22.11.0
           registry-url: https://npm.echohq.com/
-
+ 
       - name: Configure GitHub Packages auth
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm config set //npm.pkg.github.com/:_authToken "${GH_TOKEN}"
-
+ 
       - name: Generate Tag name
         id: generate_tag_name
         env:
@@ -113,11 +113,11 @@ jobs:
           else
             TAG_NAME=v$(node -p "require('./package.json').version")
           fi
-
+ 
           echo "Generated TAG_NAME: $TAG_NAME"
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_OUTPUT
-      
+     
       - name: Extract CLI version
         id: extract_cli_version
         run: |
@@ -125,7 +125,7 @@ jobs:
           echo "CLI version being packed is $CLI_VERSION"
           echo "CLI_VERSION=$CLI_VERSION" >> $GITHUB_ENV
           echo "CLI_VERSION=$CLI_VERSION" >> $GITHUB_OUTPUT
-
+ 
       - name: Check if CLI version is latest
         id: check_latest_cli_version
         env:
@@ -136,7 +136,7 @@ jobs:
           if [ "$INPUT_DEV" == "false" ] || [ -n "$INPUT_CLI_TAG" ] || [ "$GIT_REF" != "refs/heads/main" ]; then
             exit 0
           fi
-          
+         
           LATEST_CLI_VERSION=$(curl -s https://api.github.com/repos/Checkmarx/ast-cli/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
           if [ "$CLI_VERSION" = "$LATEST_CLI_VERSION" ]; then
             echo "Confirm that the CLI version in the repository is up-to-date with the most recent release: $CLI_VERSION"
@@ -144,12 +144,16 @@ jobs:
             echo "The current repository contains a CLI version that differs from the latest released version: Expected $LATEST_CLI_VERSION, got $CLI_VERSION"
             exit 1
           fi
-
+ 
       - name: NPM ci and build
+        env:
+          ECHO_LIBRARIES_ACCESS_KEY: ${{ secrets.ECHO_LIBRARIES_ACCESS_KEY }}
         run: |
+          npm config set //npm.echohq.com/:_authToken "${ECHO_LIBRARIES_ACCESS_KEY}"
+          npm config set //packages.echohq.com/:_authToken "${ECHO_LIBRARIES_ACCESS_KEY}"
           npm ci --ignore-scripts
           npm run build
-
+ 
       - name: Create Pull Request
         id: create_pr
         if: inputs.dev == false && inputs.bumpVersion == true
@@ -161,28 +165,28 @@ jobs:
           body: "This is an automated PR created by GitHub Actions"
           base: main
           draft: false
-
+ 
       - name: Wait for PR to be created
         id: pr
         if: inputs.dev == false && inputs.bumpVersion == true
         uses: octokit/request-action@b91aabaa861c777dcdb14e2387e30eddf04619ae # v3.0.0
         with:
           route: GET /repos/${{ github.repository }}/pulls?head=${{ github.repository_owner }}:${{ env.BRANCH_NAME }}
-
+ 
       - name: Merge Pull Request
         if: inputs.dev == false && inputs.bumpVersion == true
         uses: octokit/request-action@b91aabaa861c777dcdb14e2387e30eddf04619ae # v3.0.0
         with:
           route: PUT /repos/${{ github.repository }}/pulls/${{ steps.create_pr.outputs.pull-request-number }}/merge
           merge_method: squash
-
+ 
       - name: Push tag
         if: inputs.dev == false
         run: |
-          git pull 
+          git pull
           git tag ${{env.TAG_NAME}}
           git push --tags
-
+ 
       - name: Publish npm package
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -194,7 +198,7 @@ jobs:
           else
             npm publish --access public
           fi
-
+ 
       - name: Create Release
         uses: step-security/action-gh-release@277bfa82abcfdb73e5bbb19e213fd76532ee2be5 # v3.0.0
         with:
@@ -202,7 +206,7 @@ jobs:
           tag_name: ${{env.TAG_NAME}}
           generate_release_notes: true
           prerelease: ${{ inputs.dev }}
-  
+ 
   # notify:
   #   if: inputs.dev == false
   #   needs: release
@@ -215,7 +219,7 @@ jobs:
   #     release_url: https://github.com/Checkmarx/ast-cli-javascript-wrapper-runtime-cli/releases/tag/${{ needs.release.outputs.TAG_NAME }}
   #     jira_product_name: JS_RUNTIME_WRAPPER
   #   secrets: inherit
-
+ 
   # dispatch_auto_release:
   #   name: Update ADO Extension With new Wrapper Version
   #   if: inputs.dev == false
