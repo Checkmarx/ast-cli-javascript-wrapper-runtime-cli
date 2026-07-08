@@ -77,7 +77,7 @@ jobs:
       - name: Verify single lockfile (Step 0 - Supply Chain Policy)
         run: |
           if [ -f yarn.lock ] && [ -f package-lock.json ]; then
-             "❌ ERROR: Both yarn.lock and package-lock.json found. Policy requires exactly ONE package manager. Allowed: npm + package-lock.json OR Yarn + yarn.lock"
+            echo "❌ ERROR: Both yarn.lock and package-lock.json found. Policy requires exactly ONE package manager. Allowed: npm + package-lock.json OR Yarn + yarn.lock"
             exit 1
           fi
           if [ ! -f yarn.lock ] && [ ! -f package-lock.json ]; then
