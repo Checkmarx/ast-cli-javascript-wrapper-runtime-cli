@@ -26,13 +26,13 @@ jobs:
         registry-url: https://npm.echohq.com/
     - name: Configure echohq auth (both hosts)
       env:
-        ECHO_LIBRARIES_ACCESS_KEY: ${{ secrets.ECHO_LIBRARIES_ACCESS_KEY }}
+        ECHO_NPM_TOKEN: ${{ secrets.ECHO_NPM_TOKEN }}
       run: |
-        npm config set //npm.echohq.com/:_authToken "${ECHO_LIBRARIES_ACCESS_KEY}"
-        npm config set //packages.echohq.com/:_authToken "${ECHO_LIBRARIES_ACCESS_KEY}"
+        npm config set //npm.echohq.com/:_authToken "${ECHO_NPM_TOKEN}"
+        npm config set //packages.echohq.com/:_authToken "${ECHO_NPM_TOKEN}"
     - run: npm ci --ignore-scripts
       env:
-        ECHO_LIBRARIES_ACCESS_KEY: ${{ secrets.ECHO_LIBRARIES_ACCESS_KEY }}
+        ECHO_NPM_TOKEN: ${{ secrets.ECHO_NPM_TOKEN }}
     - name: Run Unit Tests
 
       run: npm run test:unit
@@ -57,13 +57,13 @@ jobs:
         registry-url: https://npm.echohq.com/
     - name: Configure echohq auth (both hosts)
       env:
-        ECHO_LIBRARIES_ACCESS_KEY: ${{ secrets.ECHO_LIBRARIES_ACCESS_KEY }}
+        ECHO_NPM_TOKEN: ${{ secrets.ECHO_NPM_TOKEN }}
       run: |
-        npm config set //npm.echohq.com/:_authToken "${ECHO_LIBRARIES_ACCESS_KEY}"
-        npm config set //packages.echohq.com/:_authToken "${ECHO_LIBRARIES_ACCESS_KEY}"
+        npm config set //npm.echohq.com/:_authToken "${ECHO_NPM_TOKEN}"
+        npm config set //packages.echohq.com/:_authToken "${ECHO_NPM_TOKEN}"
     - run: npm ci --ignore-scripts
       env:
-        ECHO_LIBRARIES_ACCESS_KEY: ${{ secrets.ECHO_LIBRARIES_ACCESS_KEY }}
+        ECHO_NPM_TOKEN: ${{ secrets.ECHO_NPM_TOKEN }}
     - name: Code Linting
       run: npm run lint
     - run: npm run build --if-present
