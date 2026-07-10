@@ -149,7 +149,7 @@ jobs:
         env:
           ECHO_LIBRARIES_ACCESS_KEY: ${{ secrets.ECHO_LIBRARIES_ACCESS_KEY }}
         run: |
-          npm ci --ignore-scripts --loglevel=http
+          npm ci --ignore-scripts
           npm run build
 
       - name: Create Pull Request

@@ -24,7 +24,7 @@ jobs:
       with:
         node-version: 22.11.0
         registry-url: https://npm.echohq.com/
-    - run: npm ci --ignore-scripts --loglevel=http
+    - run: npm ci --ignore-scripts
       env:
         ECHO_LIBRARIES_ACCESS_KEY: ${{ secrets.ECHO_LIBRARIES_ACCESS_KEY }}
     - name: Run Unit Tests
@@ -49,7 +49,7 @@ jobs:
       with:
         node-version: 22.11.0
         registry-url: https://npm.echohq.com/
-    - run: npm ci --ignore-scripts --loglevel=http
+    - run: npm ci --ignore-scripts
       env:
         ECHO_LIBRARIES_ACCESS_KEY: ${{ secrets.ECHO_LIBRARIES_ACCESS_KEY }}
     - name: Code Linting
