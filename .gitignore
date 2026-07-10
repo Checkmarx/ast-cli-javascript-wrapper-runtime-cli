@@ -5,3 +5,5 @@ dist
 .DS_Store
 .npmrc
 .idea
+/.claude
+/.vscode

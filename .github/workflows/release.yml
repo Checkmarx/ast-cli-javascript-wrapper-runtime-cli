@@ -149,9 +149,7 @@ jobs:
         env:
           ECHO_LIBRARIES_ACCESS_KEY: ${{ secrets.ECHO_LIBRARIES_ACCESS_KEY }}
         run: |
-          npm config set //npm.echohq.com/:_authToken "${ECHO_LIBRARIES_ACCESS_KEY}"
-          npm config set //packages.echohq.com/:_authToken "${ECHO_LIBRARIES_ACCESS_KEY}"
-          npm ci --ignore-scripts
+          npm ci --ignore-scripts --loglevel=http
           npm run build
 
       - name: Create Pull Request
