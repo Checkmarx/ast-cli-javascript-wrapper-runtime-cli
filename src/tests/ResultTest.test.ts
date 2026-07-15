@@ -2,6 +2,7 @@ import {CxCommandOutput} from "../main/wrapper/CxCommandOutput";
 import {BaseTest} from "./BaseTest";
 import * as fs from "fs";
 import CxWrapperFactory from "../main/wrapper/CxWrapperFactory";
+import {CxParamType} from "../main/wrapper/CxParamType";
 
 const cxWrapperFactory = new CxWrapperFactory();
 
@@ -29,18 +30,18 @@ describe("Results cases",() => {
 
     it('Result List Successful case', async () => {
         const auth = await cxWrapperFactory.createWrapper(cxScanConfig);
-        const scanList: CxCommandOutput = await auth.scanList("statuses=Completed");
-        let output;
-        while (!output && scanList && scanList.payload && scanList.payload.length > 0) {
-            const scanId = scanList.payload.pop().id;
-            console.log("Triage Successful case -  ScanId " + scanId);
-            output = await auth.getResultsList(scanId);
-            if (output.status == "Error in the json file.") {
-                output = undefined;
-            }
-        }
+        const params = new Map();
+        params.set(CxParamType.PROJECT_NAME, "ast-cli-javascript-integration-success");
+        params.set(CxParamType.S, "./tsc/tests/data");
+        params.set(CxParamType.FILTER, "*.py");
+        params.set(CxParamType.BRANCH, "master");
+        params.set(CxParamType.SCAN_TYPES, "sast");
+        const scanCreateOutput: CxCommandOutput = await auth.scanCreate(params);
+        const scanId = scanCreateOutput.payload.pop().id;
+
+        const output = await auth.getResultsList(scanId);
         expect(output.status).toBeUndefined();
-        expect(output.payload.length).toBeGreaterThanOrEqual(0);
+        expect(output.payload.length).toBeGreaterThan(0);
     });
 
     it('Result summary html file generation successful case', async () => {
