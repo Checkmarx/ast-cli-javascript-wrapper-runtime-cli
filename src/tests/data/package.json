@@ -774,7 +774,9 @@
 		"minimatch": "^9.0.0",
 		"undici": ">=6.21.3",
 		"picomatch": "^2.3.2",
-		"brace-expansion": "^2.0.3"
+		"brace-expansion": "^2.0.3",
+		"uuid": "^9.0.0"
+
 	},
 	"displayName": "Checkmarx",
 	"engines": {

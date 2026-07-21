@@ -13,14 +13,19 @@ on:
         description: 'Tag to delete'
         required: true
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
 jobs:
   delete:
+    name: Delete packages and releases
     permissions:
-      contents: write
-      packages: write
+      contents: write  # for gh release delete and tag cleanup
+      packages: write  # for deleting npm package versions
     runs-on: cx-public-ubuntu-x64
     steps:
 

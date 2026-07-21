@@ -7,22 +7,31 @@ on:
         description: 'New CLI version (optional)'
         required: false
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
 jobs:
   update-checkmarx-cli:
+    name: Update Checkmarx AST CLI
     runs-on: cx-public-ubuntu-x64
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
       # Fetch the latest Checkmarx AST CLI version
       - name: Get Latest Checkmarx API version
         id: checkmarx-ast-cli
+        env:
+          NEW_CLI_VERSION: ${{ github.event.inputs.new_cli_version }}
         run: |
-          if [ "${{ github.event.inputs.new_cli_version }}" ]; then
-            LATEST_VERSION=${{ github.event.inputs.new_cli_version }}
+          if [ "$NEW_CLI_VERSION" ]; then
+            LATEST_VERSION="$NEW_CLI_VERSION"
           else
             LATEST_VERSION=$(curl -sL https://api.github.com/repos/Checkmarx/ast-cli/releases/latest | jq -r ".tag_name")
           fi
@@ -36,7 +45,7 @@ jobs:
         env:
           RELEASE_TAG: ${{ steps.checkmarx-ast-cli.outputs.release_tag }}
         run: |
-          echo ${{ steps.checkmarx-ast-cli.outputs.release_tag }} > checkmarx-ast-cli.version
+          echo "$RELEASE_TAG" > checkmarx-ast-cli.version
 
       # Download CLI binaries and generate checksums
       - name: Download CLI and generate checksums
