@@ -44,24 +44,29 @@ on:
         default: true
         type: boolean
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
 jobs:
   delete:
     permissions:
-      contents: write
-      packages: write
-    uses: Checkmarx/ast-cli-javascript-wrapper-runtime-cli/.github/workflows/delete-packages-and-releases.yml@main
+      contents: write  # for gh release delete and tag cleanup
+      packages: write  # for deleting npm package versions
+    uses: Checkmarx/ast-cli-javascript-wrapper-runtime-cli/.github/workflows/delete-packages-and-releases.yml@main # zizmor: ignore[unpinned-uses]
     with:
       tag: ${{ inputs.jsTag }}
-    secrets: inherit
+    secrets: inherit # zizmor: ignore[secrets-inherit]
     if: inputs.dev == true
   release:
+    name: Release
     permissions:
-      id-token: write
-      contents: write
-      packages: write
+      id-token: write  # allows this job to request a GitHub OIDC token
+      contents: write  # for git tag push and creating the GitHub release
+      packages: write  # for publishing the npm package to GitHub Packages
     runs-on: cx-public-ubuntu-x64
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -181,8 +186,8 @@ jobs:
       - name: Push tag
         if: inputs.dev == false
         run: |
-          git pull 
-          git tag ${{env.TAG_NAME}}
+          git pull
+          git tag "$TAG_NAME"
           git push --tags
 
       - name: Publish npm package
