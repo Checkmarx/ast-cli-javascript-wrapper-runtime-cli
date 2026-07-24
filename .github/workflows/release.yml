@@ -185,7 +185,10 @@ jobs:
 
       - name: Push tag
         if: inputs.dev == false
+        env:
+          REPO: ${{ github.repository }}
         run: |
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${REPO}"
           git pull
           git tag "$TAG_NAME"
           git push --tags
