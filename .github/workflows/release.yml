@@ -63,6 +63,7 @@ jobs:
     if: inputs.dev == true
   release:
     name: Release
+    environment: release
     permissions:
       id-token: write  # allows this job to request a GitHub OIDC token
       contents: write  # for git tag push and creating the GitHub release

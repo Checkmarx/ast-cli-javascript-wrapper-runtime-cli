@@ -23,6 +23,7 @@ permissions:
 jobs:
   delete:
     name: Delete packages and releases
+    environment: release
     permissions:
       contents: write  # for gh release delete and tag cleanup
       packages: write  # for deleting npm package versions
