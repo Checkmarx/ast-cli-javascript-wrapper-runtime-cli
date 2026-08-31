@@ -407,22 +407,61 @@ export class CxWrapper {
         return new ExecutionService().executeCommands(this.config.pathToExecutable, commands, CxConstants.MASK_TYPE);
     }
 
-    prepareAdditionalParams(additionalParameters: string): string[] {
-        const params: string[] = [];
 
+    /**
+     * Splits additional CLI parameters into an array of tokens,
+     * correctly handling quoted values and key=value pairs.
+     *
+     * @param additionalParameters - A single string containing extra parameters
+     * @returns Array of cleaned tokens ready to pass to the CLI
+     */
+    private prepareAdditionalParams(additionalParameters: string): string[] {
         if (!additionalParameters) {
-            return params;
+            return [];
         }
 
-        const paramList = additionalParameters.match(/(?:[^\s"]+|"[^"]*")+/g);
-        logger.info("Additional parameters refined: " + paramList)
-        if (paramList) {
-            paramList.forEach((element) => {
-                params.push(element);
-            });
+        // Trim whitespace and remove surrounding quotes if present
+        let trimmed = additionalParameters.trim();
+        if (
+            (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+            (trimmed.startsWith("'") && trimmed.endsWith("'"))
+        ) {
+            trimmed = trimmed.slice(1, -1);
         }
-        return params;
+
+        // Regex matches sequences without whitespace or quoted segments
+        const regex = /(?:[^\s'"]+|'[^']*'|"[^"]*")+/g;
+        const rawTokens = trimmed.match(regex) || [];
+
+        // Process tokens: remove quotes and handle key=value syntax
+        return rawTokens.map(token => {
+            // Remove surrounding quotes
+            if (
+                (token.startsWith('"') && token.endsWith('"')) ||
+                (token.startsWith("'") && token.endsWith("'"))
+            ) {
+                token = token.slice(1, -1);
+            }
+
+            // If token contains '=', split and clean value
+            const eqIndex = token.indexOf('=');
+            if (eqIndex !== -1) {
+                const key = token.substring(0, eqIndex);
+                let value = token.substring(eqIndex + 1);
+                if (
+                    (value.startsWith('"') && value.endsWith('"')) ||
+                    (value.startsWith("'") && value.endsWith("'"))
+                ) {
+                    value = value.slice(1, -1);
+                }
+                return `${key}=${value}`;
+            }
+
+            return token;
+        });
     }
+
+
 
     getIndexOfBflNode(bflNodes: CxBFL[], resultNodes: any[]): number {
         const bflNodeNotFound = -1;

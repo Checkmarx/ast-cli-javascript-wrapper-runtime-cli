@@ -61,6 +61,27 @@ describe("ScanCreate cases", () => {
 
     })
 
+    it('prepareAdditionalParams splits complex parameters correctly', async () => {
+        // Create a wrapper instance to access the method
+        const wrapper: any = await cxWrapperFactory.createWrapper(cxScanConfig);
+
+        // The raw string exactly as it will be passed from YAML
+        const raw = "--gradle-parameters='-Prepository.proxy.url=123 -Prepository.proxy.username=123 -Prepository.proxy.password=123' --log-level Debug";
+
+        // Invoke the method under test
+        const tokens: string[] = wrapper.prepareAdditionalParams(raw);
+
+        // Verify that the output matches the expected tokens after the fix
+        expect(tokens).toEqual([
+            "--gradle-parameters=-Prepository.proxy.url=123 -Prepository.proxy.username=123 -Prepository.proxy.password=123",
+            "--log-level",
+            "Debug"
+        ]);
+    });
+
+
+
+
     it('ScanCreate Successful case no wait mode', async () => {
         const params = new Map();
         params.set(CxParamType.PROJECT_NAME, "ast-cli-javascript-integration-nowait");
