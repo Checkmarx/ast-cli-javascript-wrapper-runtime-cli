@@ -72,6 +72,7 @@ jobs:
         CX_CLIENT_ID: ${{ secrets.CX_CLIENT_ID}}
         CX_CLIENT_SECRET: ${{ secrets.CX_CLIENT_SECRET}}
         CX_BASE_URI: ${{ secrets.CX_BASE_URI }}
+        CX_BASE_AUTH_URI: ${{ secrets.CX_BASE_AUTH_URI }}
         CX_TENANT: ${{ secrets.CX_TENANT }}
         CX_APIKEY: ${{ secrets.CX_APIKEY }}
       run: npm test
