@@ -63,7 +63,7 @@ describe("Results cases",() => {
 
     it('Result codebashing successful case', async () => {
         const auth = await cxWrapperFactory.createWrapper(cxScanConfig);
-        const cxCommandOutput: CxCommandOutput = await auth.codeBashingList("79","PHP","Reflected XSS All Clients");
+        const cxCommandOutput: CxCommandOutput = await auth.codeBashingList("79","PHP","Reflected_XSS");
         expect(cxCommandOutput.payload.length).toBeGreaterThan(0);
     });
 });
