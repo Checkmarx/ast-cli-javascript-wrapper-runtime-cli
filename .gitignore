@@ -5,5 +5,5 @@ dist
 .DS_Store
 .npmrc
 .idea
-/.claude
+/.claude/settings.local.json
 /.vscode
