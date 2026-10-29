@@ -173,13 +173,13 @@ jobs:
       - name: Wait for PR to be created
         id: pr
         if: inputs.dev == false && inputs.bumpVersion == true
-        uses: octokit/request-action@b91aabaa861c777dcdb14e2387e30eddf04619ae # v3.0.0
+        uses: step-security/octokit-request-action@08f4100811cf1da063e5da53aad592beafc7d9de # v3.0.0
         with:
           route: GET /repos/${{ github.repository }}/pulls?head=${{ github.repository_owner }}:${{ env.BRANCH_NAME }}
 
       - name: Merge Pull Request
         if: inputs.dev == false && inputs.bumpVersion == true
-        uses: octokit/request-action@b91aabaa861c777dcdb14e2387e30eddf04619ae # v3.0.0
+        uses: step-security/octokit-request-action@08f4100811cf1da063e5da53aad592beafc7d9de # v3.0.0
         with:
           route: PUT /repos/${{ github.repository }}/pulls/${{ steps.create_pr.outputs.pull-request-number }}/merge
           merge_method: squash
